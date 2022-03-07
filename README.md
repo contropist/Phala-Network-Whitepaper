@@ -1,6 +1,6 @@
 # Whitepaper
 
-This repo hosts the whitepaper of Phala Network and pLIBRA.
+This repo hosts the whitepaper of Phala Network.
 
 Rendered PDFs:
 
