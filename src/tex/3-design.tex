@@ -177,7 +177,7 @@ The bytecode of the compiled contract is published on the blockchain and then lo
 
 \begin{enumerate}
     \item The developer publish the contract $c_i$ to the blockchain
-    \item Once Gatekeepers notice the publish of $c_i$, they generate a corresponding contract key $k_{c_i}$ for contract states encryption. 
+    \item Once Gatekeepers notice the publish of $c_i$, they generate a corresponding contract key $k_{c_i}$ for contract states encryption.
     \item Gatekeepers save $k_{c_i}$ to the blockchain as a part of the chainstate encrypted with Root Key $k_r^{(n)}$
     \item The developer finds an available miner to load the contract. The developer can either run his miner so that no extra fee is needed, or rent one from a resource market (see ``Economic Design Paper'' for more details).
     \item The miner runtime connects to Gatekeeper through a secure connection and asks for $k_{c_i}$ by \texttt{pRuntime.GetContractKey}.
@@ -271,55 +271,4 @@ Optimizations:
     \item Redundant miners for a contract: Currently one contract is only associated with one miner. The state recovery still takes some time though the availability is guaranteed. With >1 miners, as the contract execution is deterministic, the miners can compete to run the contract and checkpoint the states on the blockchain. The blockchain can always accept new states and reject redundant submissions.
     \item State storage prune
     \item Layer 2 state sharing
-\end{icompact}
-
-
-\section{The First Application: pLIBRA}
-
-pLIBRA is a free and privacy-preserving Libra Coin built on Polkadot. It includes
-
-\begin{icompact}
-    \item A bridge connecting Polkadot and Libra
-    \item A privacy-preserving token pLIBRA 1:1 pegged to Libra Coin (KYC not needed)
-    \item A confidential-preserving cross-chain interoperable DApp ecosystem for Libra users
-\end{icompact}
-
-\begin{figure}
-    \centering \footnotesize
-    \includegraphics[width=.7\columnwidth]{img/pLIBRA-structure}
-    \caption{pLIBRA overview.}
-    \label{fig:plibra}
-\end{figure}
-
-\subsection{System Design}
-
-pLIBRA is implemented as a confidential contract on Phala Network. It implements a Libra light client and a ERC20-like token inside the confidential contract.
-
-\begin{icompact}
-    \item \textbf{Libra Light Client}: A full light client which is capable to validate the Merkle proof of the chain state and sign transactions.
-    \item \textbf{Key Store}: Stores the private keys for the collateral Libra accounts (i.e.\,\textit{bank account}).
-    \item \textbf{AccountDB}: Stores the pLIBRA accounts and the balance.
-\end{icompact}
-
-\begin{figure}
-    \centering \footnotesize
-    \includegraphics[width=.7\columnwidth]{img/pLIBRA-contract}
-    \caption{pLIBRA Architecture.}
-    \label{fig:plibra}
-\end{figure}
-
-Confidential contract allows the client to manage privkeys and sign transactions without utilizing computing-intensive cryptographic. Libra users can send their Libra Coin to pLIBRA's bank account and get 1:1 pLIBRA token and vice versa.
-
-As the information of the pLIBRA accounts is hidden inside the enclave, the pLIBRA token gets privacy-preserving feature like Monero for free. Phala Network is designed to be launched as a parachain on Polkadot. So pLIBRA also gets the ability to interoperate with all the blockchains connected to Polkadot.
-
-At the time of writing, Libra only has very limited smart contract functionality (only whitelisted contracts are allowed). So here we present a naive way to store Libra without the need to employ an advanced feature like multisig or smart contract. When the smart contract is launched on Libra, we can further improve the security of our design by adopting a multisig-style collateral.
-
-\begin{icompact}
-    \item \textbf{Init}. During the init phase, pLIBRA contract generates a key pair and reveal the public key. Then an account on Libra blockchain serving as the \textbf{Bank Account} is registered with the public key. This is a one-off task done by pLIBRA team. Note that pLIBRA team doesn't have any control over the bank account because the private key is always kept inside the confidential contract.
-    \item \textbf{Sync}. The Libra light client is responsible to parse and validate the blockchain data from Libra network. Though at the beginning pLIBRA team will proxy Libra blockchain data to pLIBRA, the blockchain data can be fed by any user. We expect that the pLIBRA end-users will proxy the Libra blockchain data to get their transaction executed. This can be done by a shared library in the wallets. (Side notes: Libra doesn't have a typical ``blockchain'' data structure. By saying blockchain data, we refer to the Libra ledger updates.)
-    \item \textbf{Link Account}. To deposit Libra to the system for pLIBRA, linking the accounts is needed. The user links the address of his Libra account and a pLIBRA account with the signature signed by the key pair of both accounts. It proves that both accounts are owned by the user. After the link operation, deposit and withdraw can only happen between the linked accounts.
-    \item \textbf{Deposit}. The user sends some Libra coins to the \textbf{Bank Account} and tells pLIBRA the transaction. Once it's confirmed by the Libra light client inside the contract, the same amount of pLIBRA will be issued to the linked pLIBRA account.
-    \item \textbf{Withdraw}. The user can request to withdraw pLIBRA. The requested amount of pLIBRA is burned and it will produce a transaction to release the same amount of Libra to the linked address. To broadcast the transaction to Libra network, the pLIBRA contract maintains a sequence of the tx. When the withdraw requester asks for his withdraw tx, it returns all the ``not yet executed'' tx. The requester has to broadcast all the pending tx until his tx are executed.
-    \item \textbf{Transfer}. Transferring pLIBRA token is an internal change in AccountDB. Users can transfer pLIBRA freely like any ERC-20 token. The transfer happens inside the pLIBRA contract and only the owner can access the transaction information.
-    \item \textbf{Query}. Users can query the balance and the transaction history of his account. The query operation is a read of Chainview and thus it's not needed to interact with the blockchain.
 \end{icompact}
