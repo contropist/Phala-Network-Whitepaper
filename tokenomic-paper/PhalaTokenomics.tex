@@ -1,0 +1,423 @@
+\documentclass[11pt, a4paper, twocolumn]{article} 
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\usepackage[english]{babel} % English language hyphenation
+
+\usepackage{microtype} % Better typography
+
+\usepackage{amsmath,amsfonts,amsthm} % Math packages for equations
+\newtheorem{theorem}{Theorem}
+
+\usepackage[svgnames]{xcolor} % Enabling colors by their 'svgnames'
+
+\usepackage[hang, small, labelfont=bf, up, textfont=it]{caption} % Custom captions under/above tables and figures
+
+\usepackage{booktabs} % Horizontal rules in tables
+
+\usepackage{lastpage} % Used to determine the number of pages in the document (for "Page X of Total")
+
+\usepackage{graphicx} % Required for adding images
+
+\usepackage{algorithm,algorithmic}
+
+\usepackage{enumitem} % Required for customising lists
+\setlist{noitemsep} % Remove spacing between bullet/numbered list elements
+
+\usepackage{sectsty} % Enables custom section titles
+\allsectionsfont{\usefont{OT1}{phv}{b}{n}} % Change the font of all section commands (Helvetica)
+
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks   = true,      urlcolor     = blue,      linkcolor    = blue,      citecolor    = red      }
+
+\usepackage{array}
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+%----------------------------------------------------------------------------------------
+%	MARGINS AND SPACING
+%----------------------------------------------------------------------------------------
+
+\usepackage{geometry} % Required for adjusting page dimensions
+
+\geometry{
+	top=1.4cm, % Top margin
+	bottom=1.6cm, % Bottom margin
+	left=2cm, % Left margin
+	right=2cm, % Right margin
+	includehead, % Include space for a header
+	includefoot, % Include space for a footer
+	%showframe, % Uncomment to show how the type block is set on the page
+}
+
+\setlength{\columnsep}{8mm} % Column separation width
+
+%----------------------------------------------------------------------------------------
+%	FONTS
+%----------------------------------------------------------------------------------------
+
+\usepackage[T1]{fontenc} % Output font encoding for international characters
+\usepackage[utf8]{inputenc} % Required for inputting international characters
+
+\usepackage{XCharter} % Use the XCharter font
+
+%----------------------------------------------------------------------------------------
+%	HEADERS AND FOOTERS
+%----------------------------------------------------------------------------------------
+
+\usepackage{fancyhdr} % Needed to define custom headers/footers
+\pagestyle{fancy} % Enables the custom headers/footers
+
+\renewcommand{\headrulewidth}{0.0pt} % No header rule
+\renewcommand{\footrulewidth}{0.4pt} % Thin footer rule
+
+\renewcommand{\sectionmark}[1]{\markboth{#1}{}} % Removes the section number from the header when \leftmark is used
+
+%\nouppercase\leftmark % Add this to one of the lines below if you want a section title in the header/footer
+
+% Headers
+\lhead{} % Left header
+\chead{\textit{\thetitle}} % Center header - currently printing the article title
+\rhead{} % Right header
+
+% Footers
+\lfoot{} % Left footer
+\cfoot{} % Center footer
+\rfoot{\footnotesize Page \thepage\ of \pageref{LastPage}} % Right footer, "Page 1 of 2"
+
+\fancypagestyle{firstpage}{ % Page style for the first page with the title
+	\fancyhf{}
+	\renewcommand{\footrulewidth}{0pt} % Suppress footer rule
+}
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\newcommand{\authorstyle}[1]{{\large\usefont{OT1}{phv}{b}{n}\color{DarkRed}#1}} % Authors style (Helvetica)
+
+\newcommand{\institution}[1]{{\footnotesize\usefont{OT1}{phv}{m}{sl}\color{Black}#1}} % Institutions style (Helvetica)
+
+\usepackage{titling} % Allows custom title configuration
+
+\newcommand{\HorRule}{\color{DarkGoldenrod}\rule{\linewidth}{1pt}} % Defines the gold horizontal rule around the title
+
+\pretitle{
+	\vspace{-50pt} % Move the entire title section up
+	\HorRule\vspace{10pt} % Horizontal rule before the title
+	\fontsize{32}{36}\usefont{OT1}{phv}{b}{n}\selectfont % Helvetica
+	\color{DarkRed} % Text colour for the title and author(s)
+}
+
+\posttitle{\par\vskip 15pt} % Whitespace under the title
+
+\preauthor{} % Anything that will contract clusterear before \author is printed
+
+\postauthor{ % Anything that will contract clusterear after \author is printed
+	\vspace{10pt} % Space before the rule
+	\par\HorRule % Horizontal rule after the title
+	\vspace{20pt} % Space after the title section
+}
+
+%----------------------------------------------------------------------------------------
+%	ABSTRACT
+%----------------------------------------------------------------------------------------
+
+\usepackage{lettrine} % Package to accentuate the first letter of the text (lettrine)
+\usepackage{fix-cm}	% Fixes the height of the lettrine
+
+\newcommand{\initial}[1]{ % Defines the command and style for the lettrine
+	\lettrine[lines=3,findent=4pt,nindent=0pt]{% Lettrine takes up 3 lines, the text to the right of it is indented 4pt and further indenting of lines 2+ is stopped
+		\color{DarkGoldenrod}% Lettrine colour
+		{#1}% The letter
+	}{}%
+}
+
+\usepackage{xstring} % Required for string manipulation
+
+\newcommand{\lettrineabstract}[1]{
+	\StrLeft{#1}{1}[\firstletter] % Capture the first letter of the abstract for the lettrine
+	\initial{\firstletter}\textbf{\StrGobbleLeft{#1}{1}} % Print the abstract with the first letter as a lettrine and the rest in bold
+}
+
+%----------------------------------------------------------------------------------------
+%	BIBLIOGRAPHY
+%----------------------------------------------------------------------------------------
+
+\usepackage[backend=bibtex,style=authoryear,natbib=true]{biblatex} % Use the bibtex backend with the authoryear citation style (which resembles APA)
+
+\addbibresource{example.bib} % The filename of the bibliography
+
+\usepackage[autostyle=true]{csquotes} % Required to generate language-dependent quotes in the bibliography
+
+\begin{document}
+	\title{Phala Tokenomic Design}
+	\author{Samuel Häfner --- \href{https:\\samuelhaefner.github.io}{samuelhaefner.github.io} --- \href{mailto:samuel.haefner@protonmail.com}{samuel.haefner@proton.me}}
+	\date{\today}
+	
+	\maketitle
+
+	
+Phala is a trustless cloud computing solution operating in the Polkadot ecosystem. The network allows end-users to connect via so-called contract clusters to secure workers that utilize specific TEE (Trusted Execution Environment) hardware. TEEs ensure confidentiality, security, and performance.
+
+Phala tokens (PHA) serve a three-fold purpose. First, contract clusters need to stake PHA to obtain computing power from the network. Second, contract clusters charge their users PHA or some contract cluster-specific token for their services. And third, PHA are paid out by the protocol to workes (henceforth called miners)  for providing their computing infrastructure. 
+
+This paper describes the specific tokenomic design ensuring that all participants have the correct incentives to sustain the network in the long run. 
+
+
+\section{The General Idea} 
+The main tokenomic problems in the Phala network are the following: 
+%
+\begin{enumerate}
+	\item How is computing power allocated among contract clusters and their end-users?
+	\item How are contract clusters matched to miners?
+	\item How are miners incentivized to provide their computing power?
+\end{enumerate}
+%(1) How is computing power allocated among users? (2) How are users matched to miners? And (3), how are miners incentivized to provide their computing power? 
+
+%The rest of this section provides a rough overview of how Phala deals with these problems. The remaining document then address the question in more depth.
+
+%Specifically, the first question is about the demand-end tokenomics, which Section \ref{sec:deman} treats in some detail. Section \ref{sec:matching} covers the second question. The third question is about supply-end tokenomics and is further dicussed in Section \ref{sec:supply}.
+
+%The first question will be discussed at length in the demand-end tokenomics section (Section \ref{sec:deman}) below, the second one in the user-miner-matching section (Section \ref{sec:matching}), and the third one in the supply-end tokenomics section (Section \ref{sec:supply}). The rest of this section provides a rough overview.
+
+\subsection{Demand-End Tokenomics} 
+
+The demand side of Phala consists of individual \textit{developers} who develop \textit{contract clusters}. Contract clusters are the runtime environments for specific contracts, which may be deployed and called by \textit{end-users}. %A contract cluster consists of a multitude of related smart contracts together with a front-end that may cater to some specific need or allow for more general computations. %\textit{Developers} might themselves want to make use of their contract clusters. 
+
+The network's computing power is allocated through a \textit{two-layered mechanism}. The first layer allocates the network's computing resources among the different contract clusters. Here, Phala employs a \textit{staking-based approach}. On the second layer, the contract clusters allocate their computing power to the jobs that they receive from their end-users. The particular allocation mechanism at this stage is mostly left to the contract clusters.
+
+The Phala network itself may reserve a fraction of the computing power for end-users that want to run general fat contracts directly.
+
+\subsection{Cluster-Miner Matching}
+Once the share of the network's computing power that a contract cluster receives is determined, the contract clusters are matched with specific miners. Here, Phala employs a simple matching algorithm that allows contract clusters to state their preferences over miners and then prioritizes contract clusters with proportionally higher stakes to those with lower stakes.
+
+\subsection{Supply-End Tokenomics} 
+Miners are remunerated for the time they devote to the network. We additionally reward miners that are in high demand. This ensures that miners with characteristics that are in high demand have incentives to increase their capacities, which increases the efficiency of the network.
+
+
+\section{Demand-End Tokenomics}\label{sec:deman}
+Phala employs a two-layered mechanism to allocate computing resources to contract clusters. 
+
+The first layer allocates computing resources to the contract clusters in the network through a staking-based approach. End-users and developers are allowed to stake PHA into the contract clusters of their choice. The network then allocates the computing resources among the contract clusters according to their shares of staked PHAs.%\footnote{%
+	%
+	%\label{fn:staking}Staking is inspired by an idea that Marvin wrote down \href{https://hackmd.io/@Marvin/SkGmpifBK}{here}.} %I know of other projects in the Polkadot/Kusama ecosystem that think about staking schemes. One example is the \href{https://subsocial.network}{Subsocial project}. The distinction between staking-base contract clusters and fee-based contract clusters is inspired by the distinction of a parachain and a parathread on Polkdadot.}   
+
+The second layer allocates the computing resources of a contract cluster among its end-users. The contract clusters are free to employ their own solutions. Designated contract cluster tokens are possible. In any case, the mechanism on the second layer should ensure that first-layer stakers earn some revenue from their investment.
+
+
+\subsection{First Layer: Allocating Resources among the contract clusters} 
+%The number of resources allocated to the contract cluster depends on how much PHA the developers stake. 
+%
+For the following, let $P$ be the \textit{total computing power} in the network that may be distributed. We obtain the number $P$ by adding up the performance scores across all miners in the network, where the performance score of a miner is proportional to the number of computations that miner can handle per minute. 
+
+
+Time is divided in eras, which are indexed by $t = 1,2,...$. Phala network reserves a fraction $0 \leq \alpha \leq 1$ of the total computing power $P$ for end-users to deploy general fat contracts (see next subsection for more details). Hence, if, in era $t$, there are $n_t$ different contract clusters, and contract cluster $i \in \{1,...,n_t\}$ has stakes amounting to $s_{it}$, then the amount $P_{it}$ of computing power reserved for contract cluster $i$ in era $t$ is%\footnote{%
+	%
+	%See Section \ref{sec:matching} for more details on the user-miner matching that Phala employs.}
+	%Technically, the computing power that a contract cluster receives will be converted into a specific budget of CPUs that a contract cluster can claim. The contract clusters can then choose which miners to use (potentially in order of their stakes), upon which their smart contracts are loaded in the respective secure enclaves.}
+
+\begin{equation*} P_{it} = \frac{s_{it}}{\sum_{j=1}^{n_t} s_{jt}} (1-\alpha)P.\end{equation*}
+
+The reserved computing power $P_i$ for contract cluster $i$ then translates into a list of specific miners to which contract cluster $i$ can upload its code. The mechanism to do so is described in \textit{Section \ref{sec:matching}:~Cluster-Miner Matching} below.
+
+Staking happens through a dedicated staking module to which all PHA holders can contribute. The module might have a cap on the total stake above which no further stake is accepted. The developer can dynamically adjust this cap. 
+
+A contract cluster can remain funded forever, but users can take out their stakes at any time (possibly subject to an unbonding period). This ensures that once users stop wanting to use the contract cluster or deem the contract cluster as not staking-worthy anymore, there won't be any resources reserved for the contract cluster anymore, either.
+
+When initiating a contract cluster for the first time, the Phala protocol may charge a one-off permanent storage fee. This fee is meant to cover costs accruing from storing and synchronizing the corresponding states on chain.  
+
+\subsection{Second Layer: Allocating a Contract Cluster's Resources to its Users} 
+Once the individual contract clusters are allocated with their miners, the contract clusters need to allocate the jobs from their end-users to the respective miners. 
+
+The job allocation is part of the contract cluster's individual tokenomics, over which they have full discretion. In particular, a contract cluster $i$ may require their users to pay PHA, fiat, or their own \textit{contract cluster token} \textit{CTO[i]} to use their services.\footnote{%
+	%
+	Especially larger contract clusters might want to have their own CTO[i] both for community building and to decentralize decision-making. Contract clusters likely distribute CTO[i]s among their stakers proportionally to their stake, possibly recurrently, to incentivize staking (see also Section \ref{subsec:incentives} below).}
+
+Irrespective of the payment method, Phala suggests a \textit{reverse-fee model} on the second layer.\footnote{%
+		%
+	The general fat contract environment hosted by Phala network will employ a reverse-fee model. The PHA thus raised will go to treasury and to miners. The exact division is subject to governance.}
+ 	%
+Under a \textit{reverse-fee model}, the end-user pays some PHA, fiat, or CTO[i] when deploying the contract. The end-user is free to choose the amount, and the amount determines the weight that the miner attaches to a call of the contract when scheduling the incoming jobs.\footnote{%
+	%
+	There are several queuing algorithms to manage the incoming queries. For easy implementation, Phala suggests to use a SFQ-based Weighted Fair Queue scheduler.}
+
+The user calling the contract may be required to pay something to the contract for it to be executed. This can happen in PHA or CTO[i]. Alternatively, users could be asked to prepay in fiat for credits in the cluster. Also, the cluster may keep lists of authorized users that can call contracts for free. In any case, the cluster developer will be able to build a set of controlling contracts to approve or deny the contract deployment and execution requests based on their individual rules.
+
+%
+%	%
+%	\item \textit{Fee-based allocation}: Let $C$ be the complexity of a contract call. Under normal network conditions, the user has to pay $$a + b\cdot C \ \ \text{PHA or CTO[i]}$$ in order to run the computation. Here $a \geq 0$ and $b \geq 0$ are parameters that can be adjusted by governance. Then, all submitted jobs are treated equal.
+%	
+%	In times of network congestion, each user submits a bid $\beta$ (denominated in PHA or CTO[i]) along with the job, and whenever a miner is ready to accept a new job, the job with the highest $\beta/C$-ratio is chosen.
+%\end{enumerate}
+
+
+%\paragraph{General Fat Contracts} As stated in the last section, Phala reserves a fraction $\alpha$ of the total mining power for general-purpose jobs. 
+%
+%Under normal circumstances, we adopt a \textit{fee-based model}. Let $C$ be the complexity of a job. Then the user has to pay $$a + b\cdot C \ \ \text{PHA}$$ in order to run the computation. Here $a \geq 0$ and $b \geq 0$ are parameters that can be adjusted by governance. 
+%
+%In times of network congestion, Phala adopts an \textit{auction-based contract clusterroach}. In that case, each user submits a bid $\beta$ (denominated in PHA) along with the job, and whenever a miner is ready to accept a new job, the job with the highest $\beta/C$-ratio is chosen.
+%
+%The PHA thus raised will go to treasury and to miners. The exact division is subject to governance.
+
+%\paragraph{Specialized contract clusters} Specialized contract clusters are free to choose their own payment and queuing rules. In particular, they might require their end-users to pay in their own contract cluster token CTO[i]. So, contract clusters can either use a fee-based model, an auction-based model, a combination thereof, or experiment with other models such as, e.g., flat-fee models. In any case, the contract clusters will distribute the tokens that take in from their end-users among their stakers and possibly their own treasury, as discussed next.
+
+%%
+
+% Questions: How does the allocation of jobs to miners work technically? Suppose some miners are linked to a particular contract cluster. This contract cluster receives jobs from users. How are the jobs distributed then among the miners? Is this determined by the phala protocol, or have contract clusters means to come up with their own queuing rules? I think I need to have a detailed description of how this process is (or will be) implemented to see what pricing mechanisms are possible.
+
+% Queueing: Suppose total stake of a contract cluster is x, individual user stake is x_i, 
+% a) then: new job jumps the queue with probability x_i/x and needs to queue up regularly with prob 1-x_i/x, jobs cannot be retracted, and need to be paid in advance. 
+% b) then: give priorities according to relative stake, you only get served when no higher priority is in the queue.
+% Check out: queues with priorities.
+
+
+%The allocation of computing power can hcontract clusteren in different ways. Below, we describe four specific mechanisms that work out of the box on Phala. The developers are, of course, free to employ their own, too.
+%%
+%\begin{enumerate}
+%	\item {\it Based on 1st-Layer Staking}: This variant allocates the computing resources of a contract cluster proportional to the stake put into the contract cluster's staking module. 
+%	
+%	That is every staker obtains a share of the contract cluster's resources that is equal to his or her share in the total stake of the contract cluster. There is an open question of whether and how we could allow users to trade the computing resources that they have in a contract cluster on an open market. 
+%	%
+%	\item {\it Based on 2nd-Layer Staking}: This variant allows users to obtain a share of the contract cluster's resources by staking in a second-layer staking module additional PHA or the CTO[i] that they obtained or bought on the market. As for the first layer described above, the share of the contract cluster's computing resources that a user obtains is proportional to his share in the total stake by all users. 
+%	%
+%	\item {\it Transaction Fees}: The contract cluster might require users to pay a fee per transaction. There are at least two, standard ways of determining the fees:
+%	%
+%	\begin{enumerate}
+%		\item \textit{contract cluster-Chosen Fee}: Here, the contract cluster determines a fee that is proportional to the computing complexity of a smart contract call. The fee might also depend on the current usage of the contract cluster. The particular curve is set by the developer or, if existent, by the contract cluster's governance.
+%		\item \textit{User-Chosen Fee}: Here, I envision that users can set a fee and that the contract cluster then runs the submitted transactions according to their fees. That is, transactions with a higher attached fee are processed before transactions with a lower fee. 
+%	\end{enumerate}
+%	%
+%	A combination of the two fee-setting mechanisms is also possible, similar to Ether\-eum after the \href{https://ethereum.org/en/developers/docs/gas/}{London upgrade}: The total fee consists of a base fee set by the contract cluster and an additional tip that affects how fast a transaction is processed. Alternatively one could think of having a fee set by the contract cluster as long as the dedicated computing power is sufficient and an additional fee chosen by the users once the computing power is exhausted.
+%	%
+%	\item {\it Flat Fees:} The contract cluster might also charge a flat fee from the user. The flat fee would allow the user to invoke the contract cluster as much as he wants for a given amount of time (again, we might allow users to add tips to individual invocations of the contract cluster in case the miners cannot process all submitted transactions at a time).
+%\end{enumerate}
+%%
+%The pricing mechanisms target different kinds of users and might be combined within a given contract cluster. For example, transaction fees are for users that only want to make one or two transactions now and then, while staking is contract clusterealing to long-term users. 
+
+\subsection{Incetivizing Contract-Cluster Development and Staking}
+\label{subsec:incentives}
+%Even though contract cluster developers might derive utility from using their contract cluster, it might seem contract clusterropriate that they also get rewarded when other users use it. Stakers also need to be incentivized; likely there will be competition among the contract clusters for stake. 
+
+The PHA or CTO[i]s that a contract cluster takes in from its end-users could go directly to the developer and the stakers, where the developer is free to determine the share that goes to herself or himself and the share that goes to stakers. Among the stakers, the proceeds are likely distributed proportionally to their stake. 
+
+If the contract cluster has its own designated CTO[i], then the deployer and the stakers can either keep their earned CTO[i]s or sell them on a secondary market. Moreover, the CTO[i]s can be used for a contract cluster's governance, which in turn might determine how the earned tokens are distributed.
+
+%If user resource usage is allocated through (second-layer) staking of PHA or CTO[i], the staking module might ``tax`` part of stake; i.e., some of the staked PHA or CTO[i]s go to some form of contract cluster treasury. From this treasury, the developer again specifies how much he gets to keep and how much is distributed proportionally among the (first-layer) stakers.
+
+\section{Cluster-Miner Matching}\label{sec:matching}
+Once the contract clusters $i = 1,...,n_t$ are allocated with their respective computing power $P_{it}$, the miners need to be allocated to the individual contract clusters. 
+
+\paragraph{The Theoretical Problem} Let the miners in era $t$ be indexed by $j = 1,...,m_t$. Let $Q_{jt}$ be the computing power of miner $j$ in era $t$. Define $Q_t = (Q_{1t},...,Q_{m_tt})$. Let $A_t$ be an $(n_t + 1)\times m_t$-matrix whose entries are either zero or one. An entry $a_{ij}=1$ means that contract cluster $i$ and miner $j$ are matched and an entry $a_{ij}=0$ means that they are not. The row of entries with $i = n_t+1$ corresponds to the allocation to the Phala contract cluster that allows users to submit general fat contracts.
+
+For an allocation $A_t$ to be \textit{feasible}, each miner must be matched with exactly one contract cluster, 
+%
+\begin{equation}\tag{F}\label{F}\sum_{i=1}^{n_t+1} a_{ij}  = 1, \ \forall j = 1,..., m_t.\end{equation}
+
+The Phala Cluster-to-Miner matching algorithm seeks to find among the feasible allocations an allocation that maximizes the allocated computing power to the different contract clusters subject to their budget constraints. Letting $B_t = A_t\times Q_t$, these budget constraints can be written as 
+%
+\begin{equation}\tag{B}\label{B}
+(B_t)_i \leq P_{it}, \ \forall i = 1,...,n_t.
+\end{equation}
+
+Ignoring for the moment that contract clusters might have preferences over miners, the problem that a Cluster-to-Miner matching algorithm solves can be stated as
+%
+\begin{equation}\label{P}\tag{P}
+\max_{A_t} \sum_{i=1}^{n_t} (B_t)_i \text{ subject to } \eqref{F} \text{ and } \eqref{B}.
+\end{equation}
+
+If the budget constraint \eqref{B} does not bind for at least one contract cluster --- which will happen if the computing powers of the miners do not exactly add up the budget of that contract cluster --- then the general Phala contract cluster for fat contracts receives the residual computing power on top of $\alpha P$. 
+
+\paragraph{The Algorithm} Phala implements an algorithm which provides a solution that is close to that of \eqref{P} and, in addition, takes into account that the contract clusters might have preferences over the allocations satisfying \eqref{F} and \eqref{B}. 
+
+The algorithm proceeds as follows. At the beginning of each era, each contract cluster is presented with an ordered list of all available miners, $L_{it} = \{ \ell_{it1}, ...., \ell_{i t m_t} \}$. That is each element in $L_{it}$ is unique and satisfies $\ell_{itk} \in \{1,...,m_t\}$. For every contract cluster, the order of the list is drawn randomly yet the contract clusters are free to rearrange the list as they please. 
+
+The algorithm, first, rearranges the different contract clusters so that their stakes are ordered; i.e., $s_{1t} \geq s_{2t} \geq s_{3t} \geq ... \geq s_{n_tt}$, where contract clusters with identical stakes are ordered randomly. Then, the algorithm goes through the contract clusters in decreasing order of their stakes and assigns them with their most preferred miners that have not been assigned before and that are still in their budget set. 
+
+Because every contract cluster has all miners on its list, all contract clusters will be matched to some miners and the algorithm stops as soon as the least-staked contract cluster is assigned its miners. The miners that remain unmatched after this last step are then matched to the Phala contract cluster for general fat contracts.
+
+The algorithm is presented in Appendix \ref{app:algo} together with a proof of its approximate optimality when the number of miners is large.
+
+\paragraph{Discussion} The resulting allocation will be the same from era to era, if the set of miners, the set of clusters, and their stakes do not change, and the developers submit the same preferences. If another cluster comes in at some point, then we want to reallocate miners without changing the overall allocation too dramatically. The design proposed above ensures that the more you stake the less you are affected by such a new entry. In particular, if the new entrant at $t+1$ has a stake of size $\hat s$, then the budget of all remaining clusters are scaled, yet this rescaling is the less dramatic the more stake a cluster holds and the remaining clusters $i$ for which $s_{it} > \hat s$ holds still get their most preferred miners (up to their new budget).
+
+One might also be worried about miners trying the manipulate their popularity measure (cf. next section) by registering fake clusters. The algorithm prevents this by giving preference to higher-staked clusters over lower-staked ones, making such manipulation attempts rather costly. In particular, it is the function $g(.)$, discussed in the next section, that can be used to steer how much the popularity of a miner affects its pay. So, if there is reason to worry that manipulations occur, $g(.)$ can in principle be changed at any time by governance to a function that does not change very much in its argument.
+
+
+
+\section{Miner Side}\label{sec:supply}
+Remuneration of a miner depends on the security of the TEE, the computing power that it contributes to the network and its general popularity. The former is objectively measurable, the latter is determined based on the lists that the contract clusters submit to the matching algorithm.
+
+\paragraph{Measuring Popularity} To measure the popularity of a miner in an era $t$, we collect the lists $\{L_{it}\}_{i=1}^{n_t}$ that the clusters submit to the cluster-miner matching algorithm. Then, we assign points to a miner according to the ranks that he takes in these lists. Specifically, we give $m_t$ points to the first miner on a list, $m_t-1$ to the second, and so on. 
+
+Then, we add up all the points of a miner and divide the miners in $k \geq 1$ brackets $b = 1,...,k.$ of equal size according to their points. That is, each bracket contains $100/k$\% of all miners; the bracket $b=k$ contains the miners with the highest number of points and the bracket $b=1$ contains the miners with the lowest number of points. For further reference, we write $b_{it}$ for the bracket of miner $i$ in era $t$.
+
+\paragraph{Security and Computing Power} We measure the security of a miner from the Remote Attestation report from Intel and denote it by $C \geq 0$ in the following, meaning that a higher $C$ corresponds to a higher confidence in the miner. The computing power of a miner is measured by the variable $P \geq 0$, meaning that a higher $P$ corresponds to a better performance. The specific details of how these variables are measured is subject to governance.
+
+\paragraph{Stake} Miners that want to become active have to put down a stake $S \geq 0$. The stake may depend on the security and the computing power of a miner.
+
+\paragraph{Remuneration} Miner remuneration is tracked via a so-called value promise, $V_t \geq 0$. When a miner becomes active, in round $t = \underline T$, its initial value is zero.
+
+Then, in every round $t \geq \underline T$ in which the miner is still active, the value promise is increased by $f(C,P)+g(b_{it})$, where $f(.,.)$ and $g(.)$ are increasing in their respective arguments. The specific functional forms of $f$ and $g$ are subject to governance.
+
+\paragraph{Slashing} In case a miner misbehaves, the miner gets slashed. Depending on the severity of misbehavior, the slash may take on different sizes. The specifics of the slashing scheme are subject to governance. Let $s_{it} \geq 0$ be the slash that is applied to worker $i$ in era $t$.
+
+\paragraph{Intermediate Payouts} A worker can always request an intermediate payout. Let $w_{it} \geq 0$ be the intermediate payout of bidder $i$ in round $t$. The intermediate payout may never be greater than the value promise in that round net of the slashes and payouts in earlier rounds, $$w_{it} \leq \sum_{\tau =\underline T}^t \left[f(C,P)+g(b_{i\tau}) - s_{i\tau}\right] - \sum_{\tau =\underline T}^{t-1} w_{i\tau}.$$ Because $w_{it} \geq 0$, above condition implies that, as soon as the slashes exceed the value promise net of previous payouts, no new payouts can be requested.
+
+\paragraph{Final Payout} A miner can stay in the mining pool either until his stake plus value promise net of slashes and payouts becomes negative, or until he decides to leave. 
+
+That is, a miner will be excluded from the mining pool in time $\overline T$ if and only if
+%
+$$S + \sum_{t=\underline T}^{\overline T}\left[ f(C,P)+g(b_{it}) - s_{it}-w_{it}\right] \leq 0.$$
+%
+If, on the other hand, a miner decides to leave the set of active miners, he receives a final payout, $W$. If a winer leaves in period $t=\overline T$, then the final payout amounts to 
+%
+$$W = S + \sum_{t=\underline T}^{\overline T}\left[ f(C,P)+g(b_{it}) - s_{it}-w_{it}\right].$$
+
+
+\appendix
+\section{The Algorithm to Solve \eqref{P}}\label{app:algo}
+Let $M_t$ be the set of miners in era $t$. $Q_t$ is the computing power vector of the miners as defined in the text, $\{L_{it}\}_{i=1}^{n_t}$ is the lists submitted by the clusters, and $\{P_{it}\}_{i=1}^{n_t}$ is the list of computing power budgets of the clusters.
+ 
+\begin{algorithm}[h!]
+	\caption{Cluster-Miner Matching}
+	\label{algo1}
+	\begin{algorithmic}[1]
+		\REQUIRE $M_t$, $Q_t$, $\{L_{it}\}_{i=1}^{n_t}$, $\{P_{it}\}_{i=1}^{n_t}$.
+		\STATE $i \leftarrow 1$, $\mathcal M_i \leftarrow M_t$, $A_t \leftarrow 0$.
+		\FOR{$i \leq n_t$}
+		\STATE $j \leftarrow 1$.
+		\WHILE{$j \leq m_t$} 
+		\IF{$\ell_{itj} \in \mathcal M_t$}
+		\IF{($A_t \times Q_t)_i+Q_{\ell_{itj}} \leq P_{it}$}
+			\STATE $a_{i\ell_{itj}} \leftarrow 1$.
+			\STATE $\mathcal M_t = \mathcal M_t \setminus \ell_{itj}$.
+			\STATE $j = j+1$.
+		\ELSE
+			\STATE {\bf break}
+		\ENDIF
+		\ELSE
+		\STATE $j = j+1$.
+		\ENDIF
+		\ENDWHILE
+		\STATE $i=i+1$.
+		\ENDFOR
+	\end{algorithmic}
+\end{algorithm}
+
+The following result characterizes the solution of Algorithm \ref{algo1}, $\hat A_t^*$. It shows that it is always in the feasible set of the original problem \ref{P}. Moreover, it bounds the average distance of the contract cluster's allocated mining power to the maximally feasible allocated mining power. 
+
+\begin{theorem}\label{t1} The result of Algorithm \ref{algo1}, $\hat A_t$, satisfies \eqref{F} and \eqref{B}. Letting $\bar q = \max \{Q_{1t},...,Q_{m_tt}\}\times\left[\sum_{j=1}^{m_t} Q_{jt}\right]^{-1}$, it also holds $$\frac{1}{n_t}\left[\frac{\sum_{i=1}^{n_t} P_i-\sum_{i=1}^{n_t}(\hat A_t \times Q_t)_i}{ \sum_{j=1}^{m_t}Q_{jt}}\right] \leq \bar q.$$
+\end{theorem}
+
+The result shows that the algorithm approximately solves problem \eqref{P} in the following sense. If we fix the total computing power in the network, $\sum_{j=1}^{m_t}Q_{jt}$, and let the size of the largest miner vanish (which amounts to increasing the number of miners), then the algorithm's solution approaches that of \eqref{P}.
+
+\begin{proof}[Proof of Theorem \ref{t1}]
+Because the set of miners that are still available, $\mathcal M_t$, is adjusted whenever a miner gets assigned to an contract cluster (cf.~line $8$ in Algorithm \ref{algo1}), no miner can be assigned to two or more contract clusters, giving us that $\hat A_t$ satisfies \eqref{F}.
+
+The constraint \eqref{B} holds, because an additional miner on the list of a contract cluster is assigned to the contract cluster only if that does not violate the budget of the contract cluster (cf.~line $6$).
+
+Finally, that the differene between the budget and the final allocation for a bidder $i$ is bounded by $\max \{Q_{1t},...,Q_{m_tt}\}$, $$P_i - (\hat A_t \times Q_t)_i \leq \max \{Q_{1t},...,Q_{m_tt}\}.$$ Adding over all clusters $i \in \{1,...,n_t\}$ and then dividing both sides by $\sum_{j=1}^{m_t}Q_{jt}$ then gives the claim. 
+\end{proof}
+\end{document}
